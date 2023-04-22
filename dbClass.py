@@ -87,3 +87,22 @@ class dbClass:
                 print(f"The error '{e}' occurred")
 
             return stu_df
+        
+    def loadDevices(self):
+        if self.check_conn():
+            stu_df = pd.DataFrame
+            sqlStr = "SELECT * FROM cse191.devices ORDER BY groupnumber"
+            print(sqlStr)
+            cursor = self.db.cursor()
+            result = None
+            try:
+                cursor.execute(sqlStr)
+                result = cursor.fetchall()
+                print(result)
+                stu_df = pd.DataFrame.from_dict(result) 
+                stu_df.columns=["id","name","email","groupnumber","groupname"]
+                print(stu_df)
+            except Error as e:
+                print(f"The error '{e}' occurred")
+
+            return stu_df
