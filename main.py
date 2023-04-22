@@ -32,7 +32,7 @@ def setHeaders(response: Response):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.headers['Access-Control-Allow-Headers'] = 'Origin,X-Requested-With,Content-Type,Authorization,Accept'
     response.headers['Access-Control-Allow-Methods'] = 'OPTIONS,GET,PUT,POST,DELETE'
-    response.headers['Service'] = 'CSE191-G00-API'
+    response.headers['Service'] = 'CSE191-G04-API'
 
 
 class DeviceInfo(BaseModel):
@@ -42,7 +42,7 @@ class DeviceInfo(BaseModel):
 
 @app.get('/', response_class=PlainTextResponse)
 def home():
-    return 'Group00 API\n'
+    return 'Group04 API\n'
 
 
 @app.get('/health')
