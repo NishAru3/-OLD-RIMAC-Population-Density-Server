@@ -100,7 +100,7 @@ class dbClass:
                 result = cursor.fetchall()
                 print(result)
                 stu_df = pd.DataFrame.from_dict(result) 
-                stu_df.columns=["id","name","email","groupnumber","groupname"]
+                stu_df.columns=["device_id", "mac", "lastseen_ts", "last_rssi", "groupname", "location", "lang","long", "color", "groupnumber"]
                 print(stu_df)
             except Error as e:
                 print(f"The error '{e}' occurred")
