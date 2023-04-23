@@ -52,9 +52,9 @@ def process_health(response: Response):
 
 
 @app.get('/list-students', response_class=PlainTextResponse)
-def process_list_students(response: Response, outtype: Union[str, None] = None):
+def process_list_students(response: Response, gn: Union[str,None] = None, outtype: Union[str, None] = None):
     setHeaders(response)
-    student_list = cse191db.loadStudents()
+    student_list = cse191db.loadStudents(gn)
     if outtype == "JSON":
         sl_string = student_list.to_json(orient="records")
     else:
@@ -62,9 +62,9 @@ def process_list_students(response: Response, outtype: Union[str, None] = None):
     return sl_string
 
 @app.get('/list-devices', response_class=PlainTextResponse)
-def process_list_devices(response: Response, outtype: Union[str, None] = None):
+def process_list_devices(response: Response, gn: Union[str,None] = None, outtype: Union[str, None] = None):
     setHeaders(response)
-    device_list = cse191db.loadDevices()
+    device_list = cse191db.loadDevices(gn)
     if outtype == "JSON":
         dl_string = device_list.to_json(orient="records")
     else:

@@ -69,10 +69,12 @@ class dbClass:
 
         print("Success\n")
 
-    def loadStudents(self):
+    def loadStudents(self, gn):
         if self.check_conn():
             stu_df = pd.DataFrame
             sqlStr = "SELECT * FROM cse191.students ORDER BY groupnumber"
+            if (gn):
+                sqlStr = "SELECT * FROM cse191.students WHERE groupnumber="+gn+" ORDER BY groupnumber"
             print(sqlStr)
             cursor = self.db.cursor()
             result = None
@@ -88,10 +90,12 @@ class dbClass:
 
             return stu_df
         
-    def loadDevices(self):
+    def loadDevices(self, gn):
         if self.check_conn():
             stu_df = pd.DataFrame
             sqlStr = "SELECT * FROM cse191.devices ORDER BY groupnumber"
+            if (gn):
+                sqlStr = "SELECT * FROM cse191.devices WHERE groupnumber="+gn+" ORDER BY groupnumber"
             print(sqlStr)
             cursor = self.db.cursor()
             result = None
