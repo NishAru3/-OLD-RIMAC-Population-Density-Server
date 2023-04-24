@@ -1,0 +1,7 @@
+.bash_history
+.cache/
+.viminfo
+.vscode-server/
+.wget-hsts
+__pycache__/
+SELECT*

@@ -39,6 +39,10 @@ class DeviceInfo(BaseModel):
     group_id: str
     mac: str
 
+class DeviceLog(BaseModel):
+    gn: str
+    espmac: str
+    devices: list
 
 @app.get('/', response_class=PlainTextResponse)
 def home():
@@ -82,6 +86,16 @@ def process_register_device(response: Response, data: DeviceInfo):
     setHeaders(response)
     return {"resp": "OK"}
 
+@app.post('/log-devices')
+def process_log_devices(response: Response, data: DeviceLog):
+    setHeaders(response)
+    if (not cse191db.addDevice(data)):
+        return {"resp": "Fail"}
+    else: 
+        return {"resp": "OK"}
+
+ # data.group_id
+    # data.mac
 
 # run the app
 if __name__ == '__main__':
