@@ -89,13 +89,11 @@ def process_register_device(response: Response, data: DeviceInfo):
 @app.post('/log-devices')
 def process_log_devices(response: Response, data: DeviceLog):
     setHeaders(response)
-    if (not cse191db.addDevice(data)):
-        return {"resp": "Fail"}
+    if (not cse191db.addDevices(data)):
+        return {"resp": "FAIL"}
     else: 
         return {"resp": "OK"}
 
- # data.group_id
-    # data.mac
 
 # run the app
 if __name__ == '__main__':

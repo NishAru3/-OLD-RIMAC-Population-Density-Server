@@ -112,20 +112,23 @@ class dbClass:
 
             return stu_df
 
-    def addDevice(self, data):
+    def addDevices(self, data):
         if self.check_conn():
-            # INSERT INTO tbl_name
-            #     (a,b,c)
-            # VALUES
-            #     (1,2,3),
-            #     (4,5,6),
-            #     (7,8,9);
-
             ts = time.time()
             timestamp = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
             sqlStr = "INSERT INTO cse191.ble_logs\
                     (device_mac, ble_rssi, ble_mac, groupname, groupnumber, log_ts, ble_count)\
-                    VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{9}', '{10}'), ('{0}', '{5}', '{6}', '{3}', '{4}', '{9}', '{10}'), ('{0}', '{7}', '{8}', '{3}', '{4}', '{9}', '{10}');".format(data.espmac, data.devices[0].get("rssi"), data.devices[0].get("mac"), "The boyz", data.gn,  data.devices[1]["rssi"], data.devices[1]["mac"],  data.devices[2]["rssi"], data.devices[2]["mac"], timestamp, "2")
+                    VALUES"
+            
+            for i in range(len(data.devices)):
+                device = data.devices[i]
+                valStr = " ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}')".format(data.espmac, device.get("rssi"), device.get("mac"), "The Boyz", data.gn, timestamp, "2")
+                sqlStr += valStr
+                if i == len(data.devices)-1:
+                    sqlStr += ";"
+                else:
+                    sqlStr += ","
+
             cursor = self.db.cursor()
             try:
                 cursor.execute(sqlStr)
@@ -134,7 +137,4 @@ class dbClass:
             except Error as e:
                 print(sqlStr)
                 print(e)
-                return False
-            # sqlStr = "INSERT INTO ble_log (mac, groupname) VALUES ({}, {})".format(data.mac, gn)
-                
-                # (FROM cse191.devices ORDER BY groupnumber"
+        return False
