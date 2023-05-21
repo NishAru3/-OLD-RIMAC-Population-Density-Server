@@ -6,7 +6,7 @@ import os
 import sys
 import pymysql
 from pymysql import Error
-import time, datetime
+from datetime import time, datetime
 import requests
 
 '''
