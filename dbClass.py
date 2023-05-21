@@ -6,7 +6,7 @@ import os
 import sys
 import pymysql
 from pymysql import Error
-from datetime import time, datetime
+import time, datetime
 import requests
 
 '''
@@ -76,7 +76,7 @@ class dbClass:
             zip = "92093"
             weatherData = requests.get(f'http://api.openweathermap.org/data/2.5/weather?zip={zip},us&appid=0354c29c5e773c46d37727c8a0455d58')
             weatherData = json.loads(weatherData.text)
-            timestamp = datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
+            timestamp = datetime.date.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
 
             # sqlstr = f"INSERT INTO cse191.forecast (temperature,  humidity, min_temp, max_temp, forecast_ts, groupname, sunrise, sunset, zipcode)\
             #             VALUES (\"{weatherData['main']['temp']}\",\
