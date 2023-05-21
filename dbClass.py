@@ -78,22 +78,22 @@ class dbClass:
             weatherData = json.loads(weatherData.text)
             timestamp = datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
 
-            sqlstr = f"INSERT INTO cse191.forecast (temperature,  humidity, min_temp, max_temp, forecast_ts, groupname, sunrise, sunset, zipcode)\
-                        VALUES (\"{weatherData['main']['temp']}\",\
-                            \"{weatherData['main']['humidity']}\",\
-                            \"{weatherData['main']['temp_min']}\",\
-                            \"{weatherData['main']['temp_max']}\",\
-                            \"{timestamp}\",\
-                            \"The Boyz\",\
-                            \"{weatherData['sys']['sunrise']}\",\
-                            \"{weatherData['sys']['sunrise']}\",\
-                            \"{zip}\");"
+            # sqlstr = f"INSERT INTO cse191.forecast (temperature,  humidity, min_temp, max_temp, forecast_ts, groupname, sunrise, sunset, zipcode)\
+            #             VALUES (\"{weatherData['main']['temp']}\",\
+            #                 \"{weatherData['main']['humidity']}\",\
+            #                 \"{weatherData['main']['temp_min']}\",\
+            #                 \"{weatherData['main']['temp_max']}\",\
+            #                 \"{timestamp}\",\
+            #                 \"The Boyz\",\
+            #                 \"{weatherData['sys']['sunrise']}\",\
+            #                 \"{weatherData['sys']['sunrise']}\",\
+            #                 \"{zip}\");"
 
-            cursor = self.db.cursor()
-            try:
-                cursor.execute(sqlstr)
-                cursor.execute("COMMIT;")
-                return True
-            except Error as e:
-                print(e)
+            # cursor = self.db.cursor()
+            # try:
+            #     cursor.execute(sqlstr)
+            #     cursor.execute("COMMIT;")
+            #     return True
+            # except Error as e:
+            #     print(e)
         return False
