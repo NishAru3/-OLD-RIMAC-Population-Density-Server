@@ -5,10 +5,12 @@ import pandas as pd
 import uvicorn
 from fastapi import FastAPI, Response
 from fastapi.responses import PlainTextResponse
+from fastapi_utils.tasks import repeat_every
 from starlette.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-
+import datetime
 from dbClass import dbClass
+
 
 app = FastAPI()
 
@@ -54,46 +56,13 @@ def process_health(response: Response):
     setHeaders(response)
     return {"resp": "OK"}
 
-
-@app.get('/list-students', response_class=PlainTextResponse)
-def process_list_students(response: Response, gn: Union[str,None] = None, outtype: Union[str, None] = None):
-    setHeaders(response)
-    student_list = cse191db.loadStudents(gn)
-    if outtype == "JSON":
-        sl_string = student_list.to_json(orient="records")
+@app.on_event("startup")
+@repeat_every(seconds=60*60)
+def process_set_timeouts():
+    if (cse191db.postWeather()):
+        print("Successfully posted weather")
     else:
-        sl_string = student_list.to_string()
-    return sl_string
-
-@app.get('/list-devices', response_class=PlainTextResponse)
-def process_list_devices(response: Response, gn: Union[str,None] = None, outtype: Union[str, None] = None):
-    setHeaders(response)
-    device_list = cse191db.loadDevices(gn)
-    if outtype == "JSON":
-        dl_string = device_list.to_json(orient="records")
-    else:
-        dl_string = device_list.to_string()
-    return dl_string
-
-# @app.post('/list-device')
-# def process_list_device(response: Response, data: DeviceInfo):
-#     setHeaders(response)
-#     device_list = cse191db.loadDevices()
-#     return {"resp": "OK"}
-
-@app.post('/register-device')
-def process_register_device(response: Response, data: DeviceInfo):
-    setHeaders(response)
-    return {"resp": "OK"}
-
-@app.post('/log-devices')
-def process_log_devices(response: Response, data: DeviceLog):
-    setHeaders(response)
-    if (not cse191db.addDevices(data)):
-        return {"resp": "FAIL"}
-    else: 
-        return {"resp": "OK"}
-
+        print("Error posting weather")
 
 # run the app
 if __name__ == '__main__':

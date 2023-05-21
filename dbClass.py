@@ -7,6 +7,7 @@ import sys
 import pymysql
 from pymysql import Error
 import time, datetime
+import requests
 
 '''
 for remote access - add HOSTNAME=localhost to env  
@@ -70,71 +71,29 @@ class dbClass:
 
         print("Success\n")
 
-    def loadStudents(self, gn):
+    def postWeather(self):
         if self.check_conn():
-            stu_df = pd.DataFrame
-            sqlStr = "SELECT * FROM cse191.students ORDER BY groupnumber"
-            if (gn):
-                sqlStr = "SELECT * FROM cse191.students WHERE groupnumber="+gn+" ORDER BY groupnumber"
-            print(sqlStr)
-            cursor = self.db.cursor()
-            result = None
-            try:
-                cursor.execute(sqlStr)
-                result = cursor.fetchall()
-                print(result)
-                stu_df = pd.DataFrame.from_dict(result) 
-                stu_df.columns=["id","name","email","groupnumber","groupname"]
-                print(stu_df)
-            except Error as e:
-                print(f"The error '{e}' occurred")
+            zip = "92093"
+            weatherData = requests.get(f'http://api.openweathermap.org/data/2.5/weather?zip={zip},us&appid=0354c29c5e773c46d37727c8a0455d58')
+            weatherData = json.loads(weatherData.text)
+            timestamp = datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
 
-            return stu_df
-        
-    def loadDevices(self, gn):
-        if self.check_conn():
-            stu_df = pd.DataFrame
-            sqlStr = "SELECT * FROM cse191.devices ORDER BY groupnumber"
-            if (gn):
-                sqlStr = "SELECT * FROM cse191.devices WHERE groupnumber="+gn+" ORDER BY groupnumber"
-            print(sqlStr)
-            cursor = self.db.cursor()
-            result = None
-            try:
-                cursor.execute(sqlStr)
-                result = cursor.fetchall()
-                print(result)
-                stu_df = pd.DataFrame.from_dict(result) 
-                stu_df.columns=["device_id", "mac", "lastseen_ts", "last_rssi", "groupname", "location", "lang","long", "color", "groupnumber"]
-                print(stu_df)
-            except Error as e:
-                print(f"The error '{e}' occurred")
-
-            return stu_df
-
-    def addDevices(self, data):
-        if self.check_conn():
-            ts = time.time()
-            timestamp = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
-            sqlStr = "INSERT INTO cse191.ble_logs\
-                    (device_mac, ble_rssi, ble_mac, groupname, groupnumber, log_ts, ble_count)\
-                    VALUES"
-            
-            for i in range(len(data.devices)):
-                device = data.devices[i]
-                valStr = " ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}')".format(data.espmac, device.get("rssi"), device.get("mac"), "The Boyz", data.gn, timestamp, "2")
-                sqlStr += valStr
-                if i == len(data.devices)-1:
-                    sqlStr += ";"
-                else:
-                    sqlStr += ","
+            sqlstr = f"INSERT INTO cse191.forecast (temperature,  humidity, min_temp, max_temp, forecast_ts, groupname, sunrise, sunset, zipcode)\
+                        VALUES (\"{weatherData['main']['temp']}\",\
+                            \"{weatherData['main']['humidity']}\",\
+                            \"{weatherData['main']['temp_min']}\",\
+                            \"{weatherData['main']['temp_max']}\",\
+                            \"{timestamp}\",\
+                            \"The Boyz\",\
+                            \"{weatherData['sys']['sunrise']}\",\
+                            \"{weatherData['sys']['sunrise']}\",\
+                            \"{zip}\");"
 
             cursor = self.db.cursor()
             try:
-                cursor.execute(sqlStr)
+                cursor.execute(sqlstr)
                 cursor.execute("COMMIT;")
                 return True
             except Error as e:
-                print(sqlStr)
                 print(e)
         return False
