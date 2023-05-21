@@ -54,6 +54,7 @@ def home():
 @app.get('/health')
 def process_health(response: Response):
     setHeaders(response)
+    cse191db.postWeather()
     return {"resp": "OK"}
 
 @app.on_event("startup")
