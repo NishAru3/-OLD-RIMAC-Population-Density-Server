@@ -60,7 +60,7 @@ def process_health(response: Response):
 def process_get_zips(response: Response):
     setHeaders(response)
     allzips = cse191db.getZipcodes()
-    allzips = allzips.to_json(orient="records")
+    allzips = allzips.to_json(orient="values")
     return allzips
 
 def process_list_students(response: Response, gn: Union[str,None] = None, outtype: Union[str, None] = None):
