@@ -117,7 +117,7 @@ class dbClass:
             date = datetime.date.fromtimestamp(date)
             begin = date.strftime('%Y-%m-%d %H:%M:%S')
             end = (date + datetime.timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')
-            sqlstr =f"SELECT * FROM cse191.forecast WHERE zipcode = {zipcode} AND forecast_ts BETWEEN {begin} AND {end};"
+            sqlstr =f"SELECT * FROM cse191.forecast WHERE zipcode = \"{zipcode}\" AND forecast_ts BETWEEN \"{begin}\" AND \"{end}\";"
             cursor = self.db.cursor()
 
             try:
