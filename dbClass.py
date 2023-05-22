@@ -115,7 +115,7 @@ class dbClass:
     def getData(self, date, zipcode):
         if self.check_conn():
             date = datetime.date.fromtimestamp(date)
-            begin = date.strftime('%Y-%m-%d %H:%M:%S')
+            date = datetime.datetime.strptime("2023-05-21", '%Y-%m-%d')
             end = (date + datetime.timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')
             sqlstr =f"SELECT * FROM cse191.forecast WHERE zipcode = \"{zipcode}\" AND forecast_ts BETWEEN \"{begin}\" AND \"{end}\";"
             cursor = self.db.cursor()
