@@ -37,14 +37,9 @@ def setHeaders(response: Response):
     response.headers['Service'] = 'CSE191-G04-API'
 
 
-class DeviceInfo(BaseModel):
-    group_id: str
-    mac: str
-
-class DeviceLog(BaseModel):
-    gn: str
-    espmac: str
-    devices: list
+class InputWeather(BaseModel):
+    zipcode: str
+    date: str
 
 @app.get('/', response_class=PlainTextResponse)
 def home():
@@ -63,14 +58,15 @@ def process_get_zips(response: Response):
     allzips = allzips.to_json(orient="values")
     return allzips
 
-def process_list_students(response: Response, gn: Union[str,None] = None, outtype: Union[str, None] = None):
+@app.get('/get-data')
+def process_get_data(response: Response, date: Union[str,None] = None, zipcode: Union[str, None] = None):
     setHeaders(response)
-    student_list = cse191db.loadStudents(gn)
-    if outtype == "JSON":
-        sl_string = student_list.to_json(orient="records")
-    else:
-        sl_string = student_list.to_string()
-    return sl_string
+    if (date and zipcode):
+        data = cse191db.getData(date, zipcode)
+        return data.to_json(orient="values")
+    return {
+        "response": "Failed"
+    }
 
 @app.on_event("startup")
 @repeat_every(seconds=60*60)

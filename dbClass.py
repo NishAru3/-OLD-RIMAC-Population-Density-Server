@@ -111,3 +111,21 @@ class dbClass:
             except Error as e:
                 print(e)
         return False
+    
+    def getData(self, date, zipcode):
+        if self.check_conn():
+            date = datetime.date.fromtimestamp(date)
+            begin = date.strftime('%Y-%m-%d %H:%M:%S')
+            end = (date + datetime.timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')
+            sqlstr =f"SELECT * FROM cse191.forecast WHERE zipcode = {zipcode} AND forecast_ts BETWEEN {begin} AND {end};"
+            cursor = self.db.cursor()
+
+            try:
+                cursor.execute(sqlstr)
+                result = cursor.fetchall()
+                data = pd.DataFrame.from_dict(result) 
+                data.columns=["forecast_id", "temperature", "humidity", "min_temp", "max_temp", "forecast_ts", "groupname", "sunrise", "sunset", "zipcode"]
+                return data
+            except Error as e:
+                print(e)
+        return False
