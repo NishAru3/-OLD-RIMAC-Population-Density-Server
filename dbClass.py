@@ -97,3 +97,17 @@ class dbClass:
             except Error as e:
                 print(e)
         return False
+    
+    def getZipcodes(self):
+        if self.check_conn():
+            sqlstr = "SELECT DISTINCT zipcode FROM cse191.forecast;"
+            cursor = self.db.cursor()
+            try:
+                cursor.execute(sqlstr)
+                result = cursor.fetchall()
+                zips = pd.DataFrame.from_dict(result) 
+                zips.columns=["zipcodes"]
+                return zips
+            except Error as e:
+                print(e)
+        return False

@@ -56,6 +56,22 @@ def process_health(response: Response):
     setHeaders(response)
     return {"resp": "OK"}
 
+@app.get('/get-zips')
+def process_get_zips(response: Response):
+    setHeaders(response)
+    allzips = cse191db.getZipcodes()
+    allzips = allzips.to_json(orient="records")
+    return allzips
+
+def process_list_students(response: Response, gn: Union[str,None] = None, outtype: Union[str, None] = None):
+    setHeaders(response)
+    student_list = cse191db.loadStudents(gn)
+    if outtype == "JSON":
+        sl_string = student_list.to_json(orient="records")
+    else:
+        sl_string = student_list.to_string()
+    return sl_string
+
 @app.on_event("startup")
 @repeat_every(seconds=60*60)
 def process_set_timeouts():
